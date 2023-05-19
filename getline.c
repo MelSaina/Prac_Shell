@@ -8,52 +8,35 @@
 extern void print_prompt1(void);
 char *read_cmd(void)
 {
-	char buf[1024];
 	char *ptr = NULL;
-	char ptrlen = 0;
+	size_t bufsize = 0;
 	
-	while (fgets(buf, 1024, stdin))
+	while (1)
 	{
-		int buflen = strlen(buf);
+		ssize_t buflen = getline(&ptr, &bufsize, stdin);
 
-		if (!ptr)
+		if (buflen == -1)
 		{
-			ptr = malloc(buflen + 1);
+			const char *errmsg = "error: failed to read input: ";
+			write(STDERR_FILENO, errmsg, strlen(errmsg));
+			write(STDERR_FILENO, strerror(errno), strlen(strerror(errno)));
+			write(STDERR_FILENO, "\n", 1);
+			free(ptr);
+			return (NULL);
 		}
-		else
+		if (ptr[buflen - 1] == '\n')
 		{
-			char *ptr2 = realloc(ptr, ptrlen + buflen + 1);
-			if (ptr2)
+			if (buflen == 1 || ptr[buflen - 2] != '\\')
 			{
-				ptr = ptr2;
+				ptr[buflen - 1] = '\0';
+				return (ptr);
 			}
-			else
-			{
-				free(ptr);
-				ptr = NULL;
-			}
-		}
-		if (!ptr)
-		{
-			char errmsg[1024];
-			int len = snprintf(errmsg, sizeof(errmsg), "error: failed to alloc buffer: %s\n", strerror(errno));
-			write(STDERR_FILENO, errmsg, len);
-			return NULL;
-		}
-		strcpy(ptr + ptrlen, buf);
-		if (buf[buflen - 1] == '\n')
-		{
-			if (buflen == 1 || buf[buflen - 2] != '\\')
-			{
-				return ptr;
-			}
-			ptr[ptrlen + buflen - 2] = '\0';
+			ptr[buflen - 2] = '\0';
 			buflen -= 2;
 			print_prompt1();
 		}
-		ptrlen += buflen;
+		
 	}
-	return ptr;
 }
 void print_prompt1(void)
 {
