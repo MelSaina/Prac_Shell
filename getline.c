@@ -3,8 +3,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#include "shell.h"
 
-void print_prompt1(void);
+extern void print_prompt1(void);
 char *read_cmd(void)
 {
 	char buf[1024];
