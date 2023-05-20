@@ -6,10 +6,11 @@
 #include "source.h"
 #include "parser.h"
 #include "executor.h"
-
 int main(int argc, char **argv)
 {
 	char *cmd;
+	
+	initsh();
 
 	do
 	{
@@ -73,5 +74,6 @@ int parse_and_execute(struct source_s *src)
 		tok = tokenize(src);
 	}
 
-	return 1;
+	return (1);
 }
+

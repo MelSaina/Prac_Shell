@@ -40,5 +40,17 @@ char *read_cmd(void)
 }
 void print_prompt1(void)
 {
-	fprintf(stderr, "$ ");
+	struct symtab_entry_s *entry = get_symtab_entry("PS1");
+	const char *prompt;
+
+	if (entry && entry->val)
+	{
+		prompt = entry->val;
+	}
+	else
+	{
+		 prompt = "$ ";
+	}
+	size_t prompt_len = strlen(prompt);
+	write(STDERR_FILENO, prompt, prompt_len);
 }
