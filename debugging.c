@@ -1,4 +1,10 @@
 #include <unistd.h>
+#include <string.h>
+#include "symtab.h"
+
+struct symtab_stack_s symtab_stack;
+int    symtab_level;
+
 void dump_local_symtab(void)
 {
 	struct symtab_s *symtab = symtab_stack.local_symtab;
@@ -29,8 +35,8 @@ void dump_local_symtab(void)
 		count += write(STDERR_FILENO, entry_format, strlen(entry_format));
 		count += write(STDERR_FILENO, " ", indent);
 		count += write(STDERR_FILENO, " ", i++);
-		count += write(STDERR_FILENO, " ", entry->name);
-		count += write(STDERR_FILENO, " ", entry->val);
+		count += write(STDERR_FILENO, " ", strlen(entry->name));
+		count += write(STDERR_FILENO, " ", strlen(entry->val));
 		entry = entry->next;
 	}
 	count += write(STDERR_FILENO, footer, strlen(footer));

@@ -1,6 +1,6 @@
-#include <stdlib.h> #include <string.h>
+#include <stdlib.h>
 #include "shell.h"
-
+#include <string.h>
 
 /*
  * search string for any one of the passed characters.
@@ -101,7 +101,7 @@ char *quote_val(char *val, int add_quotes)
                 *p++ = *v++;
                 break;
 
-            default
+	    default:
                 *p++ = *v++;
                 break;
         }
